@@ -9,8 +9,12 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import {fileURLToPath} from 'url';
+import postRoutes from './routes/post.js';
+import userRoutes from './routes/users.js';
 import authRoutes from './routes/auth.js';
 import {register} from './controllers/auth.js';
+import {createPost} from './controllers/posts.js';
+// import {verifyToken} from './middleware/auth.js';
 
 //importing middlewares {configurations}
 const __filename = fileURLToPath(import.meta.url);
@@ -39,12 +43,16 @@ const upload = multer({storage});
 
 //routes with file
 app.post('/auth/register' , upload.single('picture'), register);
+app.post('/posts', verifyToken , upload.single('picture'), createPost);
 
 //routes
 app.use('/auth', authRoutes);
+app.use('/users' , userRoutes);
+app.use('/posts', postRoutes);
 
 //Mongoose setup
 import connectDB  from './db.js';
+import { verifyToken } from "./middleware/auth.js";
 connectDB();
 const PORT = 3000;
 app.listen(PORT , () => {
