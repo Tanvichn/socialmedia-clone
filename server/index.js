@@ -14,7 +14,12 @@ import userRoutes from './routes/users.js';
 import authRoutes from './routes/auth.js';
 import {register} from './controllers/auth.js';
 import {createPost} from './controllers/posts.js';
-// import {verifyToken} from './middleware/auth.js';
+import User from './models/User.js';
+import Post from './models/Post.js';
+import { users, posts} from './data/index.js';
+//Mongoose setup
+import connectDB  from './db.js';
+import { verifyToken } from "./middleware/auth.js";
 
 //importing middlewares {configurations}
 const __filename = fileURLToPath(import.meta.url);
@@ -50,10 +55,12 @@ app.use('/auth', authRoutes);
 app.use('/users' , userRoutes);
 app.use('/posts', postRoutes);
 
-//Mongoose setup
-import connectDB  from './db.js';
-import { verifyToken } from "./middleware/auth.js";
-connectDB();
+
+connectDB().then(()=> {
+    //add data only one time
+    // User.insertMany(users);
+    // Post.insertMany(posts);
+});
 const PORT = 3000;
 app.listen(PORT , () => {
     console.log('Server at port ' + PORT);
