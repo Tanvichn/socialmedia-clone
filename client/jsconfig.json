@@ -1,0 +1,7 @@
+//import other files we can start from scr
+{
+    "compilerOptions": {
+        "baseUrl" : "src"
+    },
+    "include": ["src"]
+}
